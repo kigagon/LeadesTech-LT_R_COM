@@ -108,7 +108,7 @@ TIM_HandleTypeDef htim12;
 /* USER CODE BEGIN PV */
 
 //Array to store sub-64 system information, located in sdram2 (0x30000000)
-// Group_Data[64][1260]
+// Group_Data[8][8][1110]
 uint8_t Group_Data[Group_Max_Number][SUB_Group_Max_Number]
 				   [Repeater_Header_Number +(Repeater_Number * Repeater_Data_Number) + Repeater_Crc_Number + Repeater_End_Number ] __attribute__((section(".d2_data"))) = {0};
 

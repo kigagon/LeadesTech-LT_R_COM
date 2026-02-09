@@ -147,7 +147,7 @@ void UI_Cmd_Func(void){
 				Board_Address_Check = 1;
 			}
 			else if((UI_UART_RX_buf[4]== 0)&(UI_UART_RX_buf[5]== 0)){
-				if((UI_UART_RX_buf[3] == 0x52)|(UI_UART_RX_buf[3] == 0x47)){
+				if((UI_UART_RX_buf[3] == 0x52)|(UI_UART_RX_buf[3] == 0x47)|(UI_UART_RX_buf[3] == 0x6C)){
 					Board_Address_Check = 1;
 				}
 			}
@@ -191,12 +191,14 @@ void UI_Cmd_Func(void){
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x52){	//'R' Repeater recovery request
 				 UI_Cmd_Func_R();
+				 Init_Group_Data();
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x44){	//'D' Registering repeater accumulated setting
 				 UI_Cmd_Func_D();
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x47){	//'G' Repeater accumulation On Off
 				 UI_Cmd_Func_G();
+				 Init_Group_Data();
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x56){	//'V' Repeater Version information request
 				 UI_Cmd_Func_V();
@@ -209,6 +211,7 @@ void UI_Cmd_Func(void){
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x6C){	//I' 등록 정보 전송 완
 				 UI_Com_Func_Anal_LED_Set();
+				 Init_Group_Data();
 			 }
 		}
 	}
@@ -500,6 +503,7 @@ void UI_Cmd_Func_R(void)
 void UI_Cmd_Func_G(void)
 {
 	Def_Send_Data();
+
 }
 
 void UI_Com_Func_Anal_LED_Set(void)
@@ -1428,6 +1432,16 @@ void UI_Cmd_Func_V(void){
 
 				HAL_GPIO_WritePin(UI_485_DC_GPIO_Port, UI_485_DC_Pin, GPIO_PIN_RESET); // rx mode
 				LED_Control(UI_485_TX_LED_GPIO_Port, UI_485_TX_LED_Pin , LED_Off);
+			}
+		}
+	}
+}
+
+void Init_Group_Data(void){
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			for(int k=0; k<1110; k++){
+				Group_Data[i][j][k] = 0;
 			}
 		}
 	}
