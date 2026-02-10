@@ -546,7 +546,7 @@ int main(void)
   MX_TIM12_Init();
   MX_UART8_Init();
   MX_SPI1_Init();
-//  MX_IWDG1_Init();
+  MX_IWDG1_Init();
   /* USER CODE BEGIN 2 */
 
   ///////////////Start LED initialization//////////////////
