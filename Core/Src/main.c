@@ -207,6 +207,12 @@ uint8_t Save_Com_Version_Data[9][6];
 uint8_t Com_Version_Data[Com_Version_Data_Number];
 uint8_t Rep_Version_Data[Group_Max_Number][SUB_Group_Max_Number][Rep_Version_Data_Number];
 
+
+uint8_t Group_Tmp_Data[Group_Max_Number][SUB_Group_Max_Number]
+				   [Repeater_Header_Number +(Repeater_Number * Repeater_Data_Number) + Repeater_Crc_Number + Repeater_End_Number ] __attribute__((section(".d2_data"))) = {0};
+
+uint8_t Group_Set_Info[Group_Max_Number][SUB_Group_Max_Number][456];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -546,7 +552,7 @@ int main(void)
   MX_TIM12_Init();
   MX_UART8_Init();
   MX_SPI1_Init();
-  MX_IWDG1_Init();
+//  MX_IWDG1_Init();
   /* USER CODE BEGIN 2 */
 
   ///////////////Start LED initialization//////////////////

@@ -1041,11 +1041,12 @@ void UI_Cmd_Func_D(void)
 
 void UI_Cmd_Func_I(void)
 {
-	uint8_t Main_Group=0 , Send_Main = 0;
+	uint8_t Main_Group=0 , Send_Main = 0, Sub_Group=0;
 	uint8_t Save_Num = 0;
 
 	if(CM_Board == Recever_Board){
 		Main_Group = UI_UART_RX_buf[4];
+		Sub_Group = UI_UART_RX_buf[5];
 	}
 	else if(CM_Board == Repearter_Board){
 		Main_Group = UI_UART_RX_buf[5];					// relay
@@ -1102,6 +1103,30 @@ void UI_Cmd_Func_I(void)
 		}
 	}
 
+	for(int i = 0; i<456 ; i++){
+		Group_Set_Info[Main_Group-1][Sub_Group-1][i] = SUB_UART_TX_buf[Main_Group-1][i];
+	}
+
+	for(int i=0; i<Repeater_Data_Total; i++){
+		Group_Tmp_Data[Main_Group-1][Sub_Group-1][i] = 0;
+	}
+
+	Group_Tmp_Data[Main_Group-1][Sub_Group-1][0] = 0x53;
+	Group_Tmp_Data[Main_Group-1][Sub_Group-1][1] = 0x54;
+	Group_Tmp_Data[Main_Group-1][Sub_Group-1][2] = 0x63;
+	Group_Tmp_Data[Main_Group-1][Sub_Group-1][3] = 0x72;
+	Group_Tmp_Data[Main_Group-1][Sub_Group-1][4] = Main_Group;
+	Group_Tmp_Data[Main_Group-1][Sub_Group-1][5] = Sub_Group;
+
+	for(int i=0; i<220; i++){
+		if(Group_Set_Info[Main_Group-1][Sub_Group-1][13+(i*2)] == 1){
+			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+0] = i+1;
+			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+1] = 0xA0;
+			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+2] = 0x00;
+			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+3] = 0x00;
+			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+4] = 0xA0;
+		}
+	}
 }
 
 

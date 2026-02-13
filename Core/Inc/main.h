@@ -217,6 +217,7 @@ void Read_Sub_Version(void);
 // Group_Data[8][8][1110]
 extern uint8_t Group_Data[Group_Max_Number][SUB_Group_Max_Number][Repeater_Header_Number +(Repeater_Number * Repeater_Data_Number) + Repeater_Crc_Number + Repeater_End_Number];
 
+
 //Array to store lower 8 relay panel power board information
 //Pow_Bod_Data[8][16]
 extern uint8_t Pow_Bod_Data[Pow_Bod_Max_Number][Pow_Bod_Header_Number + Pow_Bod_Data_Number + Pow_Bod_CkSum_Number + Pow_Bod_End_Number];
@@ -324,6 +325,10 @@ extern uint8_t Com_Version_Data[Com_Version_Data_Number];
 extern uint8_t Rep_Version_Data[Group_Max_Number][SUB_Group_Max_Number][Rep_Version_Data_Number];
 
 extern uint8_t Sub_Version_Read_Cnt;
+
+extern uint8_t Group_Tmp_Data[Group_Max_Number][SUB_Group_Max_Number][Repeater_Header_Number +(Repeater_Number * Repeater_Data_Number) + Repeater_Crc_Number + Repeater_End_Number];
+extern uint8_t Group_Set_Info[Group_Max_Number][SUB_Group_Max_Number][456];
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
