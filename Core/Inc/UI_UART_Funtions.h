@@ -32,6 +32,8 @@ void UI_Cmd_Func_V(void);
 void UI_Cmd_Func_I(void);
 void UI_Cmd_Func_I_End(void);
 void UI_Com_Func_Anal_LED_Set(void);
+void UI_Cmd_Func_a(void);
 
 void Def_Send_Data(void);
 void Init_Group_Data(void);
+void Set_Tmp_Group_Data(uint8_t Main_Group, uint8_t Sub_Group);

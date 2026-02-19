@@ -121,8 +121,8 @@ uint8_t Pow_Bod_Data[Pow_Bod_Max_Number][Pow_Bod_Header_Number + Pow_Bod_Data_Nu
 uint8_t Group_Regster[Group_Max_Number][Group_Register_Data_Number];
 
 //Array to store the charge information of the lower 64 systems
-//Group_Charge_Regster[64][508]
-uint8_t Group_Charge_Regster[Group_Max_Number][Group_Charge_Register_Number];
+//Group_Charge_Regster[8][8][440]
+uint8_t Group_Charge_Regster[Group_Max_Number][SUB_Group_Max_Number][Group_Charge_Register_Number];
 
 //Array to store accumulation time information for lower 64 systems, does not operate if time is 0
 //Group_Charge_Time[64][9]
