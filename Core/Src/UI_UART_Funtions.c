@@ -1175,10 +1175,16 @@ void UI_Cmd_Func_I(void)
 		}
 	}
 
-	for(int i = 0; i<456 ; i++){
-		Group_Set_Info[Main_Group-1][Sub_Group-1][i] = SUB_UART_TX_buf[Main_Group-1][i];
+	if(CM_Board == Recever_Board){
+		for(int i = 0; i<456 ; i++){
+			Group_Set_Info[Main_Group-1][Sub_Group-1][i] = SUB_UART_TX_buf[Main_Group-1][i];
+		}
 	}
-
+	else if(CM_Board == Repearter_Board){
+		for(int i = 0; i<456 ; i++){
+			Group_Set_Info[Main_Group-1][0][i] = SUB_UART_TX_buf[Main_Group-1][i];
+		}
+	}
 	/*
 	for(int i=0; i<Repeater_Data_Total; i++){
 		Group_Tmp_Data[Main_Group-1][Sub_Group-1][i] = 0;
