@@ -248,11 +248,13 @@ extern uint8_t Rep_Pow_Bod_Data[Pow_Bod_Header_Number + Pow_Bod_Data_Number + Po
 #define REPEATER_Acc_OnOff_Num 10
 extern uint8_t REPEATER_Acc_Set_Data[Group_Max_Number][SUB_Group_Max_Number][REPEATER_Acc_Set_Num];
 
+/*
 #define Set_Command_T_Num  256
 #define Set_Command_T_Lan  640
 extern uint8_t Set_Command_Num , Set_Command_Num_tmp;
 extern uint8_t Set_Command_Data[Set_Command_T_Num][Set_Command_T_Lan], Set_Command_Data_tmp[Set_Command_T_Num][Set_Command_T_Lan];
 extern uint8_t Set_Command_Data_Ck[Set_Command_T_Lan];
+*/
 //array to store addresses
 extern uint8_t DIP_Value;
 
@@ -328,6 +330,9 @@ extern uint8_t Sub_Version_Read_Cnt;
 
 extern uint8_t Group_Tmp_Data[Group_Max_Number][SUB_Group_Max_Number][Repeater_Header_Number +(Repeater_Number * Repeater_Data_Number) + Repeater_Crc_Number + Repeater_End_Number];
 extern uint8_t Group_Set_Info[Group_Max_Number][SUB_Group_Max_Number][456];
+
+extern uint8_t Group_Port_Output[Group_Max_Number][SUB_Group_Max_Number][Group_Charge_Register_Number];
+extern uint8_t Analog_Led_Mode[24][8];
 
 /* USER CODE END Private defines */
 

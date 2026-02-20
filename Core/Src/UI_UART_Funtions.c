@@ -183,8 +183,13 @@ void UI_Cmd_Func(void){
 				 UI_Cmd_Func_A();
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x53){	//'S' Repeater settings: Repeater output settings
-				 UI_Cmd_Func_S();
-				 //UI_Cmd_Func_S_Save();
+				 if((UI_UART_RX_buf[4] == 0)|(UI_UART_RX_buf[5] == 0)){
+
+				 }
+				 else{
+					 UI_Cmd_Func_S();
+					 UI_Cmd_Func_S_Save();
+				 }
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x43){	//'C' Delete repeater information
 //				 UI_Cmd_Func_C();
@@ -194,7 +199,9 @@ void UI_Cmd_Func(void){
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x52){	//'R' Repeater recovery request
 				 UI_Cmd_Func_R();
-				 Init_Group_Data();
+				 HAL_Delay(500);
+				 NVIC_SystemReset();
+				 //Init_Group_Data();
 			 }
 			 else if(UI_UART_RX_buf[3] == 0x44){	//'D' Registering repeater accumulated setting
 				 UI_Cmd_Func_D();
@@ -211,9 +218,22 @@ void UI_Cmd_Func(void){
 			 else if(UI_UART_RX_buf[3] == 0x69){	//I' 등록 정보 전송 완
 				 UI_Cmd_Func_I_End();
 			 }
-			 else if(UI_UART_RX_buf[3] == 0x6C){	//I' 등록 정보 전송 완
+			 else if(UI_UART_RX_buf[3] == 0x6C){	//l' 아날로그 LED 제어
 				 UI_Com_Func_Anal_LED_Set();
-				 Init_Group_Data();
+
+				 if((UI_UART_RX_buf[4] ==0)&(UI_UART_RX_buf[5] ==0)){
+					 for(int i=0; i<24; i++){
+						 for(int j=0; j<8;j++){
+							 if(UI_UART_RX_buf[6]== 0){
+								 Analog_Led_Mode[i][j] = LED_On;
+							 }
+							 else if(UI_UART_RX_buf[6]== 1){
+								 Analog_Led_Mode[i][j] = LED_Off;
+							 }
+						 }
+					 }
+				 }
+
 			 }
 			 if(UI_UART_RX_buf[3] == 0x61){		// 'a' Repeater Test information request: Read all information of the requested system.
 				 UI_Cmd_Func_a();
@@ -504,87 +524,10 @@ void UI_Cmd_Func_S(void){
 	}
 }
 
-void UI_Cmd_Func_S_N(void)
+void UI_Cmd_Func_S_All(void)
 {
 
-	uint8_t R_Type, Output_Data;
 
-	if(CM_Board == Recever_Board){
-		if( (((DIP_Value - 1) * 4 + 1) >=  UI_UART_RX_buf[4] ) & (((DIP_Value) * 4 + 1) <  UI_UART_RX_buf[4]) ){
-
-		}
-	}
-	else if(CM_Board == Repearter_Board){
-		if(Rep_Group_Data[2] == 0x0){
-			Rep_Group_Data[2] = 0x72;
-		}
-		else{
-			Rep_Group_Data[2] = Rep_Group_Data[2];
-		}
-	}
-
-	for(int i=0;i<Set_Command_Num; i++){
-
-		R_Type = Group_Data[ Set_Command_Data[i][4] - 1 ][ Set_Command_Data[i][5] - 1 ][7+((Set_Command_Data[i][6] - 1)*5) ] ;
-		Output_Data = Group_Data[ Set_Command_Data[i][4] - 1 ][ Set_Command_Data[i][5] - 1 ][9+((Set_Command_Data[i][6] - 1)*5) ] ;
-
-		if( (R_Type == 0xA0)|(R_Type == 0x40)|(R_Type == 0x44) ){
-			if(Output_Data == Set_Command_Data[i][8]){
-				Set_Command_Data_Ck[i]=0;
-			}
-			else{
-				Set_Command_Data_Ck[i]=1;
-				Sub_Cmd_Func_S(i);
-				for(int j=0; j<Set_Command_T_Lan ; j++){
-					Set_Command_Data_tmp[Set_Command_Num_tmp][j] = Set_Command_Data[i][j];
-					Set_Command_Num_tmp++;
-				}
-			}
-		}
-		else{
-			if(Set_Command_Data[i][8] == 0){
-
-			}
-			else{
-				Set_Command_Data_Ck[i]=1;
-				for(int j=0; j<Set_Command_T_Lan ; j++){
-					Set_Command_Data_tmp[Set_Command_Num_tmp][j] = Set_Command_Data[i][j];
-					Set_Command_Num_tmp++;
-				}
-			}
-		}
-
-	}
-
-	Set_Command_Num_tmp = 0;
-
-	for(int i=0;i<Set_Command_Num; i++){
-		if(Set_Command_Data_Ck[i]==1){
-
-			for(int j=0; j<Set_Command_T_Num ; j++){
-				 Set_Command_Data_tmp[Set_Command_Num_tmp][j] = Set_Command_Data[i][j];
-
-			}
-			Set_Command_Num_tmp++;
-		}
-		else{
-
-		}
-	}
-
-	for(int i=0;i<Set_Command_T_Num; i++){
-		for(int j=0; j<Set_Command_T_Lan ; j++){
-			Set_Command_Data[i][j] = 0;
-		}
-	}
-
-	for(int i=0;i<Set_Command_Num_tmp; i++){
-		for(int j=0; j<Set_Command_T_Lan ; j++){
-			Set_Command_Data[i][j] = Set_Command_Data_tmp[i][j];
-		}
-	}
-
-	Set_Command_Num = Set_Command_Num_tmp;
 
 }
 
@@ -1096,15 +1039,20 @@ void UI_Cmd_Func_T(void){
 
 void UI_Cmd_Func_S_Save(void){
 
-	for(int  i=0 ; i < Set_Command_T_Lan; i++){
-		if(UI_UART_RX_buf_Lan > i){
-			Set_Command_Data[Set_Command_Num][i] = UI_UART_RX_buf[i];
-		}
-		else{
-			Set_Command_Data[Set_Command_Num][i] = 0;
-		}
+	uint8_t Main_Group=0, Sub_Group=0, Repeater_Num;
+
+	if(CM_Board == Recever_Board){
+		Main_Group = UI_UART_RX_buf[4];
+		Sub_Group = UI_UART_RX_buf[5];
 	}
-	Set_Command_Num++;
+	else if(CM_Board == Repearter_Board){
+		Main_Group = UI_UART_RX_buf[5];					// relay
+	}
+
+	Repeater_Num = UI_UART_RX_buf[6];
+
+	Group_Port_Output[Main_Group-1][Sub_Group-1][(2*Repeater_Num) -1] = UI_UART_RX_buf[8] ;
+
 }
 
 void UI_Cmd_Func_D(void)
@@ -1616,13 +1564,19 @@ void Set_Tmp_Group_Data(uint8_t Main_Group, uint8_t Sub_Group){
 
 
 	for(int i=0; i<220; i++){
+
 		Type = (Group_Set_Info[Main_Group-1][Sub_Group-1][13+(i*2)]&0x0f);
 		Sub_Type = ((Group_Set_Info[Main_Group-1][Sub_Group-1][13+(i*2)] >>4)&0x0f);
 
+
+
 		if((Type >= 1) &(Type <= 3)) { //중계기
 
+			//출력 확인
+			Out_Set = Group_Port_Output[Main_Group-1][Sub_Group-1][(1*2)+1];
 			// 종별 축적 확인
 			Charge_Set = Group_Charge_Regster[Main_Group-1][Sub_Group-1][2*i+1];
+
 			for(int j=0; j<4; j++){
 				Charge_port_Set[j] = (Charge_Set > i) & 0x01;
 				Charge_port_Set[j] = Charge_port_Set[j] ^ ((Sub_Type> i) & 0x01);
@@ -1635,6 +1589,7 @@ void Set_Tmp_Group_Data(uint8_t Main_Group, uint8_t Sub_Group){
 
 			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+2] = 0x00;
 			Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+3] = 0x00;
+
 			if(Type == 1){ //일반형 중계기
 				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+1] = 0xA0;
 				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+4] = (0xA0)|(Charge_Set&0x0f);
@@ -1649,6 +1604,36 @@ void Set_Tmp_Group_Data(uint8_t Main_Group, uint8_t Sub_Group){
 			}
 		}
 		else if((Type >= 4) &(Type <= 7)) { //아날로그
+
+			//출력 확인
+			if(Analog_Led_Mode[Main_Group-1][Sub_Group-1] == LED_On){
+				Out_Set = (Group_Port_Output[Main_Group-1][Sub_Group-1][(1*2)+1]) & 0xF7;
+			}
+			else if(Analog_Led_Mode[Main_Group-1][Sub_Group-1] == LED_Off){
+				Out_Set = (Group_Port_Output[Main_Group-1][Sub_Group-1][(1*2)+1]) | 0x08;
+			}
+
+			if(Type == 4){ //정온식
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+1] = 0x44;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+3] = Out_Set;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+4] = 0x00;//일반형
+			}
+			else if(Type == 5){ //아이솔레이터형 정온식
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+1] = 0x44;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+3] = Out_Set;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+4] = 0x10;//아이솔레이터형
+
+			}
+			else if(Type == 6){ //광전식
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+1] = 0x40;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+3] = Out_Set;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+4] = 0x00;//일반형
+			}
+			else if(Type == 7){ //아이솔레이터형 광전식
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+1] = 0x40;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+3] = Out_Set;
+				Group_Tmp_Data[Main_Group-1][Sub_Group-1][6+(i*5)+4] = 0x10;//아이솔레이터형
+			}
 
 		}
 	}

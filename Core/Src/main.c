@@ -124,6 +124,11 @@ uint8_t Group_Regster[Group_Max_Number][Group_Register_Data_Number];
 //Group_Charge_Regster[8][8][440]
 uint8_t Group_Charge_Regster[Group_Max_Number][SUB_Group_Max_Number][Group_Charge_Register_Number];
 
+//출력 상태
+//Group_Port_Output[8][8][440]
+uint8_t Group_Port_Output[Group_Max_Number][SUB_Group_Max_Number][Group_Charge_Register_Number];
+
+
 //Array to store accumulation time information for lower 64 systems, does not operate if time is 0
 //Group_Charge_Time[64][9]
 uint8_t Group_Charge_Time[Group_Max_Number][Group_Charge_Time_Number];
@@ -139,9 +144,9 @@ uint8_t Rep_Pow_Bod_Data[Pow_Bod_Header_Number + Pow_Bod_Data_Number + Pow_Bod_C
 //Array Repeater accumulation setting
 uint8_t  REPEATER_Acc_Set_Data[Group_Max_Number][SUB_Group_Max_Number][REPEATER_Acc_Set_Num];
 
-uint8_t Set_Command_Num = 0, Set_Command_Num_tmp = 0 ;
-uint8_t Set_Command_Data[Set_Command_T_Num][Set_Command_T_Lan], Set_Command_Data_tmp[Set_Command_T_Num][Set_Command_T_Lan];
-uint8_t Set_Command_Data_Ck[Set_Command_T_Lan];
+//uint8_t Set_Command_Num = 0, Set_Command_Num_tmp = 0 ;
+//uint8_t Set_Command_Data[Set_Command_T_Num][Set_Command_T_Lan], Set_Command_Data_tmp[Set_Command_T_Num][Set_Command_T_Lan];
+//uint8_t Set_Command_Data_Ck[Set_Command_T_Lan];
 
 //array to store addresses
 uint8_t DIP_Value_tmp[8];
@@ -213,6 +218,7 @@ uint8_t Group_Tmp_Data[Group_Max_Number][SUB_Group_Max_Number]
 
 uint8_t Group_Set_Info[Group_Max_Number][SUB_Group_Max_Number][456];
 
+uint8_t Analog_Led_Mode[24][8];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -640,6 +646,16 @@ int main(void)
 	  Flash_Status = 1;
 	  W25qxx_Init();
   }
+
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			for(int k=0; k<(Group_Charge_Register_Number/2); k++){
+				Group_Port_Output[i][j][2*k + 0] = k+1;
+				Group_Port_Output[i][j][2*k + 1] = 0x00;
+			}
+		}
+	}
+
 
 /*
   uint8_t W25Q_Page_Read_t[512];

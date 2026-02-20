@@ -525,77 +525,9 @@ void Sub_Cmd_Func_A(uint8_t Main_Group, uint8_t Sub_Group){
 
 }
 
-void Sub_Cmd_Func_S(int num)
+void Sub_Cmd_Func_Set_All(void)
 {
 
-	uint8_t Main_Group=0;
-	int Tx_data_Len;
-
-	if(CM_Board == Recever_Board){
-		Main_Group = Set_Command_Data[num][4];
-	}
-	else if(CM_Board == Repearter_Board){
-		Main_Group = Set_Command_Data[num][5];					// relay
-	}
-
-//	if(Set_Command_Data[num][3] == 0x53){	//'S' Repeater settings: Repeater output settings
-//		Tx_data_Len = 14;
-//	}
-//	else if(Set_Command_Data[num][3] == 0x43){	//'C' Delete repeater information
-//
-//	}
-//	else if(Set_Command_Data[num][3] == 0x49){	//'I' Register repeater information
-//
-//	}
-//	else if(Set_Command_Data[num][3] == 0x52){	//'R' Repeater recovery request
-//
-//	}
-//	else if(Set_Command_Data[num][3] == 0x44){	//'D' Registering repeater accumulated information
-//
-//	}
-//	else if(Set_Command_Data[num][3] == 0x47){	//'G' Repeater accumulation setting
-//
-//	}
-//	else if(Set_Command_Data[num][3] == 0x47){	//'O' Repeater All Output Setting
-//
-//	}
-
-	Tx_data_Len = 14;
-
-	for(int i = 0; i<Tx_data_Len ; i++){
-		SUB_UART_TX_buf[Main_Group-1][i] = Set_Command_Data[num][i];
-	}
-
-	if(CM_Board == Recever_Board){
-
-	}
-	else if(CM_Board == Repearter_Board){
-	}
-
-	Sub_Cmd_DC_On(Main_Group);
-	Sub_Cmd_RX_LED_Off(Main_Group);
-	Sub_Cmd_TX_LED_On(Main_Group);
-
-	HAL_Delay(1);
-
-	//Sub_Cmd_TX_UART(Main_Group, SUB_UART_TX_buf[Main_Group-1], 1);
-
-	Sub_Cmd_TX_UART(Main_Group, SUB_UART_TX_buf[Main_Group-1], Tx_data_Len);
-
-	if(CM_Board  ==  Repearter_Board){
-		HAL_Delay((Tx_data_Len/150)+1);
-	}
-	else{
-		HAL_Delay((Tx_data_Len/20)+1);
-	}
-	Sub_Cmd_DC_Off(Main_Group);
-	Sub_Cmd_TX_LED_Off(Main_Group);
-	if(CM_Board  ==  Repearter_Board){
-		HAL_Delay(10);
-	}
-	else{
-		HAL_Delay(30);
-	}
 
 }
 

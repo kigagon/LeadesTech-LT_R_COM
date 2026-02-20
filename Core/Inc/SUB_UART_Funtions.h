@@ -51,5 +51,5 @@ void Sub_Cmd_Func_S(int num);
 void Sub_Cmd_Func_T(uint8_t Main_Group);
 
 void Check_Sub_UART_ComV_Receive(uint8_t Sub_Group);
-
+void Sub_Cmd_Func_Set_All(void);
 

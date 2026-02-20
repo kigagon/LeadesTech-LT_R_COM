@@ -24,7 +24,7 @@ void UI_Cmd_Func_P(void);
 void UI_Cmd_Func_T(void);
 void UI_Cmd_Func_S_Save(void);
 void UI_Cmd_Func_S(void);
-void UI_Cmd_Func_S_N(void);
+void UI_Cmd_Func_S_All(void);
 void UI_Cmd_Func_R(void);
 void UI_Cmd_Func_D(void);
 void UI_Cmd_Func_G(void);
